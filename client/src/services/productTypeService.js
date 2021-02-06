@@ -5,5 +5,5 @@ export const productTypes = [
 ];
 
 export function getProductType() {
-  return productTypes.filter((pt) => pt);
+  return productTypes; //productTypes.filter((pt) => pt);
 }

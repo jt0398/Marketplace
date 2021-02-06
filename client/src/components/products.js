@@ -5,6 +5,19 @@ class Products extends Component {
   state = {
     products: getProducts(),
   };
+
+  constructor() {
+    super();
+
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleDelete(product) {
+    console.log(product);
+    const products = this.state.products.filter((p) => p._id !== product._id);
+    this.setState({ products });
+  }
+
   render() {
     return (
       <table className="table">
@@ -25,7 +38,12 @@ class Products extends Component {
               <td>{product.numberInStock}</td>
               <td>{product.price}</td>
               <td>
-                <button className="btn btn-danger btn-small">Delete</button>
+                <button
+                  onClick={() => this.handleDelete(product)}
+                  className="btn btn-danger btn-small"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
