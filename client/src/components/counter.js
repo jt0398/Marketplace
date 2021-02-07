@@ -11,7 +11,7 @@ class Counter extends Component {
   }
 
   componentDidMount() {
-    this.setState({ value: this.props.value });
+    this.setState({ value: this.props.counter.value });
   }
 
   handleIncrement(product) {
@@ -29,7 +29,7 @@ class Counter extends Component {
           Increment
         </button>
         <button
-          onClick={() => this.props.onDelete(this.props.id)}
+          onClick={() => this.props.onDelete(this.props.counter.id)}
           className="btn btn-danger btn-sm ml-2"
         >
           Delete
