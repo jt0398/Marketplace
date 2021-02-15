@@ -6,16 +6,10 @@ class Products extends Component {
     products: getProducts(),
   };
 
-  constructor() {
-    super();
-
-    this.handleDelete = this.handleDelete.bind(this);
-  }
-
-  handleDelete(product) {
+  handleDelete = (product) => {
     const products = this.state.products.filter((p) => p._id !== product._id);
     this.setState({ products });
-  }
+  };
 
   render() {
     const { length: count } = this.state.products;

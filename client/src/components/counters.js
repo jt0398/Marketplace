@@ -11,21 +11,23 @@ class Counters extends Component {
     ],
   };
 
-  constructor() {
-    super();
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleReset = this.handleReset(this);
-  }
-
-  handleDelete(id) {
+  handleDelete = (id) => {
     const counters = this.state.counters.filter((counter) => counter.id !== id);
     this.setState({ counters });
-  }
+  };
 
-  handleReset() {
+  handleReset = () => {
     const counters = this.state.counters.map((counter) => (counter.value = 0));
     this.setState({ counters });
-  }
+  };
+
+  handleIncrement = (counter) => {
+    const counters = [...this.state.counters];
+    const index = counters.indexOf(counter);
+    counters[index] = { ...counter };
+    counters[index].value++;
+    this.setState({ counters });
+  };
 
   render() {
     return (
@@ -38,6 +40,7 @@ class Counters extends Component {
             key={counter.id}
             counter={counter}
             onDelete={this.handleDelete}
+            onIncrement={this.handleIncrement}
           />
         ))}
       </div>
