@@ -7,6 +7,7 @@ const products = [
     productType: { _id: "5b21ca3eeb7f6fbccd471818", name: "Toys & Games" },
     numberInStock: 6,
     price: 2.5,
+    liked: true,
   },
   {
     _id: "5b21ca3eeb7f6fbccd471816",

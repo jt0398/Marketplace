@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { getProducts } from "../services/productService";
+import Like from "./like";
 
 class Products extends Component {
   state = {
@@ -11,6 +12,14 @@ class Products extends Component {
     this.setState({ products });
   };
 
+  handleLike = (product) => {
+    const products = [...this.state.products];
+    const index = products.indexOf(product);
+    products[index] = { ...product };
+    products[index].liked = !products[index].liked;
+    this.setState({ products });
+  };
+
   render() {
     const { length: count } = this.state.products;
 
@@ -19,24 +28,31 @@ class Products extends Component {
     return (
       <React.Fragment>
         <p>Showing {count} products in the database</p>
-        <table className="table">
+        <table className="table mt-5">
           <thead>
             <tr>
-              <th>Name</th>
               <th>Type</th>
-              <th>Stock</th>
               <th>Price</th>
+              <th>Name</th>
+              <th>Rate</th>
               <th></th>
+              <th>Stock</th>
             </tr>
           </thead>
           <tbody>
             {this.state.products.map((product) => (
               <tr key={product._id}>
-                <td>{product.name}</td>
-                <td>{product.productType.name}</td>
-                <td>{product.numberInStock}</td>
-                <td>{product.price}</td>
-                <td>
+                <td className="pr-5">{product.name}</td>
+                <td className="pr-5">{product.productType.name}</td>
+                <td className="pr-5">{product.numberInStock}</td>
+                <td className="pr-5">{product.price}</td>
+                <td className="pr-5">
+                  <Like
+                    liked={product.liked}
+                    onClick={() => this.handleLike(product)}
+                  />
+                </td>
+                <td className="pr-5">
                   <button
                     onClick={() => this.handleDelete(product)}
                     className="btn btn-danger btn-small"
