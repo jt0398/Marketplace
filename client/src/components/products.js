@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { getProducts } from "../services/productService";
 import Like from "./like";
 import Pagination from "./pagination";
+import { paginate } from "../utils/paginate";
 
 class Products extends Component {
   state = {
     products: getProducts(),
     pageSize: 4,
+    currentPage: 1,
   };
 
   handleDelete = (product) => {
@@ -22,14 +24,17 @@ class Products extends Component {
     this.setState({ products });
   };
 
-  handlePageChange = () => {
-    console.log("Page Changed");
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
   };
 
   render() {
     const { length: count } = this.state.products;
+    const { pageSize, currentPage, products: allProducts } = this.state;
 
     if (count === 0) return <p>There are no products in the database.</p>;
+
+    const products = paginate(allProducts, currentPage, pageSize);
 
     return (
       <React.Fragment>
@@ -46,7 +51,7 @@ class Products extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.products.map((product) => (
+            {products.map((product) => (
               <tr key={product._id}>
                 <td className="pr-5">{product.name}</td>
                 <td className="pr-5">{product.productType.name}</td>
@@ -71,9 +76,10 @@ class Products extends Component {
           </tbody>
         </table>
         <Pagination
-          itemsCount={this.state.products.length}
-          pageSize={this.state.pageSize}
+          itemsCount={count}
+          pageSize={pageSize}
           onPageChange={this.handlePageChange}
+          currentPage={currentPage}
         />
       </React.Fragment>
     );
