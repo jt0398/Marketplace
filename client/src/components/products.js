@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { getProducts } from "../services/productService";
 import Like from "./like";
+import Pagination from "./pagination";
 
 class Products extends Component {
   state = {
     products: getProducts(),
+    pageSize: 4,
   };
 
   handleDelete = (product) => {
@@ -20,6 +22,10 @@ class Products extends Component {
     this.setState({ products });
   };
 
+  handlePageChange = () => {
+    console.log("Page Changed");
+  };
+
   render() {
     const { length: count } = this.state.products;
 
@@ -27,16 +33,16 @@ class Products extends Component {
 
     return (
       <React.Fragment>
-        <p>Showing {count} products in the database</p>
-        <table className="table mt-5">
+        <p className="mt-5">Showing {count} products in the database</p>
+        <table className="table">
           <thead>
             <tr>
               <th>Type</th>
-              <th>Price</th>
               <th>Name</th>
-              <th>Rate</th>
+              <th>Number In Stock</th>
+              <th>Price</th>
               <th></th>
-              <th>Stock</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +70,11 @@ class Products extends Component {
             ))}
           </tbody>
         </table>
+        <Pagination
+          itemsCount={this.state.products.length}
+          pageSize={this.state.pageSize}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
