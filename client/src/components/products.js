@@ -12,10 +12,19 @@ class Products extends Component {
     productTypes: [],
     pageSize: 4,
     currentPage: 1,
+    selectedProductType: null,
   };
 
   componentDidMount() {
-    this.setState({ products: getProducts(), productTypes: getProductTypes() });
+    const productTypes = [
+      { name: "All Product Types", _id: 0 },
+      ...getProductTypes(),
+    ];
+
+    this.setState({
+      products: getProducts(),
+      productTypes,
+    });
   }
 
   handleDelete = (product) => {
@@ -35,28 +44,43 @@ class Products extends Component {
     this.setState({ currentPage: page });
   };
 
-  handleProductTypeSelect = (producType) => {
-    console.log(producType);
+  handleProductTypeSelect = (productType) => {
+    this.setState({ selectedProductType: productType, currentPage: 1 });
   };
 
   render() {
-    const { length: count } = this.state.products;
-    const { pageSize, currentPage, products: allProducts } = this.state;
+    const {
+      pageSize,
+      currentPage,
+      products: allProducts,
+      productTypes,
+      selectedProductType,
+    } = this.state;
+
+    const filteredProducts =
+      selectedProductType && selectedProductType._id
+        ? allProducts.filter(
+            (product) => product.productType._id === selectedProductType._id
+          )
+        : allProducts;
+
+    const { length: count } = filteredProducts;
 
     if (count === 0) return <p>There are no products in the database.</p>;
 
-    const products = paginate(allProducts, currentPage, pageSize);
+    const products = paginate(filteredProducts, currentPage, pageSize);
 
     return (
-      <div className="row">
+      <div className="row mt-5">
         <div className="col-2">
           <ListGroup
-            items={this.state.productTypes}
+            items={productTypes}
             onItemSelect={this.handleProductTypeSelect}
+            selectedItem={selectedProductType}
           />
         </div>
         <div className="col">
-          <p className="mt-5">Showing {count} products in the database</p>
+          <p>Showing {count} products in the database</p>
           <table className="table">
             <thead>
               <tr>
