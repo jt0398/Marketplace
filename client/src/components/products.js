@@ -35,8 +35,8 @@ class Products extends Component {
     this.setState({ products });
   };
 
-  handleSort = (path) => {
-    this.setState({ sortColumn: { path, order: "asc" } });
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
   };
 
   handleLike = (product) => {
@@ -100,6 +100,7 @@ class Products extends Component {
             onLike={this.handleLike}
             onDelete={this.handleDelete}
             onSort={this.handleSort}
+            sortColumn={sortColumn}
           />
           <Pagination
             itemsCount={count}
