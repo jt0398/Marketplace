@@ -1,7 +1,7 @@
 import "./App.css";
 import Products from "./components/products";
-import Counters from "./components/counters";
-import NavBar from "./components/navbar";
+import Counters from "./components/common/counters";
+import NavBar from "./components/common/navbar";
 import React, { Component } from "react";
 
 class App extends Component {

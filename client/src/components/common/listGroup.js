@@ -20,6 +20,7 @@ const ListGroup = (props) => {
           }
           key={item[valueProperty]}
           onClick={() => onItemSelect(item)}
+          style={{ cursor: "pointer" }}
         >
           {item[textProperty]}
         </li>
