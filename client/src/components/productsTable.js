@@ -2,16 +2,16 @@ import React from "react";
 import Like from "./common/like";
 
 const ProductsTable = (props) => {
-  const { products, onLike, onDelete } = props;
+  const { products, onLike, onDelete, onSort } = props;
 
   return (
     <table className="table">
       <thead>
         <tr>
-          <th>Type</th>
-          <th>Name</th>
-          <th>Number In Stock</th>
-          <th>Price</th>
+          <th onClick={() => onSort("name")}>Name</th>
+          <th onClick={() => onSort("productType.name")}>Type</th>
+          <th onClick={() => onSort("numberInStock")}>Number In Stock</th>
+          <th onClick={() => onSort("price")}>Price</th>
           <th></th>
           <th></th>
         </tr>

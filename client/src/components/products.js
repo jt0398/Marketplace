@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { getProducts } from "../services/productService";
-import { getProductTypes } from "../services/productTypeService";
 import ProductsTable from "./productsTable";
 import Pagination from "./common/pagination";
-import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
+import { paginate } from "../utils/paginate";
+import { getProducts } from "../services/productService";
+import { getProductTypes } from "../services/productTypeService";
+import _ from "lodash";
 
 class Products extends Component {
   state = {
@@ -13,11 +14,12 @@ class Products extends Component {
     pageSize: 4,
     currentPage: 1,
     selectedProductType: null,
+    sortColumn: { path: "name", order: "asc" },
   };
 
   componentDidMount() {
     const productTypes = [
-      { name: "All Product Types", _id: 0 },
+      { name: "All Product Types", _id: "" },
       ...getProductTypes(),
     ];
 
@@ -31,6 +33,10 @@ class Products extends Component {
   handleDelete = (product) => {
     const products = this.state.products.filter((p) => p._id !== product._id);
     this.setState({ products });
+  };
+
+  handleSort = (path) => {
+    this.setState({ sortColumn: { path, order: "asc" } });
   };
 
   handleLike = (product) => {
@@ -56,6 +62,7 @@ class Products extends Component {
       products: allProducts,
       productTypes,
       selectedProductType,
+      sortColumn,
     } = this.state;
 
     const filteredProducts =
@@ -65,11 +72,17 @@ class Products extends Component {
           )
         : allProducts;
 
-    const { length: count } = filteredProducts;
+    const sortedProducts = _.orderBy(
+      filteredProducts,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
+
+    const { length: count } = sortedProducts;
 
     if (count === 0) return <p>There are no products in the database.</p>;
 
-    const products = paginate(filteredProducts, currentPage, pageSize);
+    const products = paginate(sortedProducts, currentPage, pageSize);
 
     return (
       <div className="row mt-5">
@@ -86,6 +99,7 @@ class Products extends Component {
             products={products}
             onLike={this.handleLike}
             onDelete={this.handleDelete}
+            onSort={this.handleSort}
           />
           <Pagination
             itemsCount={count}
