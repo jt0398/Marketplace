@@ -6,17 +6,10 @@ const Like = (props) => {
   if (!props.liked) classes += "-o";
 
   return (
-    <i
-      className={classes}
-      aria-hidden="true"
-      onClick={props.onClick}
-      style={{ cursor: "pointer" }}
-    ></i>
+    <div className="clickable">
+      <i className={classes} aria-hidden="true" onClick={props.onClick}></i>
+    </div>
   );
-};
-
-Like.defaultProps = {
-  liked: false,
 };
 
 Like.propTypes = {
