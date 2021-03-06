@@ -55,7 +55,13 @@ class Products extends Component {
     this.setState({ selectedProductType: productType, currentPage: 1 });
   };
 
-  getPagedData = (allProducts, selectedProductType, sortColumn) => {
+  getPagedData = () => {
+    const {
+      products: allProducts,
+      selectedProductType,
+      sortColumn,
+    } = this.state;
+
     const filteredProducts =
       selectedProductType && selectedProductType._id
         ? allProducts.filter(
@@ -76,17 +82,12 @@ class Products extends Component {
     const {
       pageSize,
       currentPage,
-      products: allProducts,
       productTypes,
       selectedProductType,
       sortColumn,
     } = this.state;
 
-    const { totalCount: count, data } = this.getPagedData(
-      allProducts,
-      selectedProductType,
-      sortColumn
-    );
+    const { totalCount: count, data } = this.getPagedData();
 
     if (count === 0) return <p>There are no products in the database.</p>;
 
