@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Like = (props) => {
+const Like = ({ liked, onClick }) => {
   let classes = "fa fa-heart";
-  if (!props.liked) classes += "-o";
+  if (!liked) classes += "-o";
 
   return (
     <div className="clickable">
-      <i className={classes} aria-hidden="true" onClick={props.onClick}></i>
+      <i className={classes} aria-hidden="true" onClick={onClick}></i>
     </div>
   );
 };
