@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Like from "./common/like";
 import TableHeader from "./common/tableHeader";
+import TableBody from "./common/tableBody";
 
 class ProductsTable extends Component {
   columns = [
@@ -8,8 +9,26 @@ class ProductsTable extends Component {
     { path: "productType.name", label: "Product" },
     { path: "numberInStock", label: "Stock" },
     { path: "price", label: "Price" },
-    { key: "like" },
-    { key: "delete" },
+    {
+      key: "like",
+      content: (product) => (
+        <Like
+          liked={product.liked}
+          onClick={() => this.props.onLike(product)}
+        />
+      ),
+    },
+    {
+      key: "delete",
+      content: (product) => (
+        <button
+          onClick={() => this.props.onDelete(product)}
+          className="btn btn-danger btn-small"
+        >
+          Delete
+        </button>
+      ),
+    },
   ];
 
   raiseSort = (path) => {
@@ -24,7 +43,7 @@ class ProductsTable extends Component {
   };
 
   render() {
-    const { products, onLike, onDelete, onSort, sortColumn } = this.props;
+    const { products, onSort, sortColumn } = this.props;
     return (
       <table className="table">
         <TableHeader
@@ -32,27 +51,7 @@ class ProductsTable extends Component {
           sortColumn={sortColumn}
           onSort={onSort}
         />
-        <tbody>
-          {products.map((product) => (
-            <tr key={product._id}>
-              <td className="pr-5">{product.name}</td>
-              <td className="pr-5">{product.productType.name}</td>
-              <td className="pr-5">{product.numberInStock}</td>
-              <td className="pr-5">{product.price}</td>
-              <td className="pr-5">
-                <Like liked={product.liked} onClick={() => onLike(product)} />
-              </td>
-              <td className="pr-5">
-                <button
-                  onClick={() => onDelete(product)}
-                  className="btn btn-danger btn-small"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        <TableBody data={products} columns={this.columns} dataKey="_id" />
       </table>
     );
   }

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Like = (props) => {
   let classes = "fa fa-heart";
@@ -12,6 +13,15 @@ const Like = (props) => {
       style={{ cursor: "pointer" }}
     ></i>
   );
+};
+
+Like.defaultProps = {
+  liked: false,
+};
+
+Like.propTypes = {
+  liked: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 export default Like;
