@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 import Like from "./common/like";
+import TableHeader from "./common/tableHeader";
 
 class ProductsTable extends Component {
+  columns = [
+    { path: "name", label: "Name" },
+    { path: "productType.name", label: "Product" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "price", label: "Price" },
+    { key: "like" },
+    { key: "delete" },
+  ];
+
   raiseSort = (path) => {
     const sortColumn = { ...this.props.sortColumn };
     if (sortColumn.path === path)
@@ -14,21 +24,14 @@ class ProductsTable extends Component {
   };
 
   render() {
-    const { products, onLike, onDelete } = this.props;
+    const { products, onLike, onDelete, onSort, sortColumn } = this.props;
     return (
       <table className="table">
-        <thead>
-          <tr>
-            <th onClick={() => this.raiseSort("name")}>Name</th>
-            <th onClick={() => this.raiseSort("productType.name")}>Type</th>
-            <th onClick={() => this.raiseSort("numberInStock")}>
-              Number In Stock
-            </th>
-            <th onClick={() => this.raiseSort("price")}>Price</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
+        <TableHeader
+          columns={this.columns}
+          sortColumn={sortColumn}
+          onSort={onSort}
+        />
         <tbody>
           {products.map((product) => (
             <tr key={product._id}>
