@@ -1,8 +1,13 @@
 import "./App.css";
-import Products from "./components/products";
-import Counters from "./components/common/counters";
-import NavBar from "./components/common/navbar";
 import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
+import Products2 from "./pages/products";
+import Posts from "./pages/posts";
+import Dashboard from "./components/admin/dashboard";
+import Home from "./pages/home";
+import Cart from "./pages/cart";
+import NavBar from "./components/common/navbar";
+import ProductDetails from "./pages/productDetails";
 
 class App extends Component {
   state = {
@@ -44,24 +49,41 @@ class App extends Component {
   };
 
   render() {
+    //Order routes from most specific routes to generic
+    //render=(props) and {...props} passes history, match, and location props to components
+    /*Optional path parameter are marked with question mark i.e. /posts/:year?/:month?
+      It's better to use query string for optional parameters i.e. /posts?sortBy=newest
+    */
     return (
-      <React.Fragment>
+      <div>
         <NavBar
           totalCounters={
             this.state.counters.filter((counter) => counter.value > 0).length
           }
         />
         <main className="container">
-          <Counters
-            counters={this.state.counters}
-            onReset={this.handleReset}
-            onIncrement={this.handleIncrement}
-            onDelete={this.handleDelete}
-            onDecrement={this.handleDecrement}
-          />
-          <Products />
+          <Switch>
+            <Route path="/products/:id" component={ProductDetails} />
+            <Route path="/products" component={Products2} />
+            <Route path="/posts/:year?/:month?" component={Posts} />
+            <Route path="/admin" component={Dashboard} />
+            <Route
+              path="/cart"
+              render={(props) => (
+                <Cart
+                  counters={this.state.counters}
+                  onReset={this.handleReset}
+                  onIncrement={this.handleIncrement}
+                  onDecrement={this.handleDecrement}
+                  onDelete={this.handleDelete}
+                  {...props}
+                />
+              )}
+            />
+            <Route path="/" component={Home} />
+          </Switch>
         </main>
-      </React.Fragment>
+      </div>
     );
   }
 }
