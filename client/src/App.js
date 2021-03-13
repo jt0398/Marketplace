@@ -1,13 +1,15 @@
 import "./App.css";
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
-import Products2 from "./pages/products";
+import { Route, Switch, Redirect } from "react-router-dom";
+import Products from "./pages/products";
 import Posts from "./pages/posts";
 import Dashboard from "./components/admin/dashboard";
 import Home from "./pages/home";
 import Cart from "./pages/cart";
 import NavBar from "./components/common/navbar";
 import ProductDetails from "./pages/productDetails";
+import NotFound from "./pages/notFound";
+import Customer from "./pages/customer";
 
 class App extends Component {
   state = {
@@ -64,7 +66,8 @@ class App extends Component {
         <main className="container">
           <Switch>
             <Route path="/products/:id" component={ProductDetails} />
-            <Route path="/products" component={Products2} />
+            <Route path="/products" component={Products} />
+            <Route path="/customer" component={Customer} />
             <Route path="/posts/:year?/:month?" component={Posts} />
             <Route path="/admin" component={Dashboard} />
             <Route
@@ -80,7 +83,10 @@ class App extends Component {
                 />
               )}
             />
-            <Route path="/" component={Home} />
+            <Redirect from="/messages" to="/posts" />
+            <Route path="/not-found" component={NotFound} />
+            <Route path="/" exact component={Home} />
+            <Redirect to="/not-found" />
           </Switch>
         </main>
       </div>
