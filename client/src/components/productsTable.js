@@ -2,10 +2,17 @@ import React, { Component } from "react";
 import Like from "./common/like";
 import TableHeader from "./common/tableHeader";
 import TableBody from "./common/tableBody";
+import { Link } from "react-router-dom";
 
 class ProductsTable extends Component {
   columns = [
-    { path: "name", label: "Name" },
+    {
+      path: "name",
+      label: "Name",
+      content: (product) => (
+        <Link to={`/products/${product._id}`}>{product.name}</Link>
+      ),
+    },
     { path: "productType.name", label: "Product" },
     { path: "numberInStock", label: "Stock" },
     { path: "price", label: "Price" },

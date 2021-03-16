@@ -1,4 +1,3 @@
-import "./App.css";
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Products from "./pages/products";
@@ -10,6 +9,8 @@ import NavBar from "./components/common/navbar";
 import ProductDetails from "./pages/productDetails";
 import NotFound from "./pages/notFound";
 import Customer from "./pages/customer";
+import Login from "./pages/login";
+import "./App.css";
 
 class App extends Component {
   state = {
@@ -66,6 +67,7 @@ class App extends Component {
         <main className="container">
           <Switch>
             <Route path="/products/:id" component={ProductDetails} />
+            <Route path="/login" component={Login} />
             <Route path="/products" component={Products} />
             <Route path="/customer" component={Customer} />
             <Route path="/posts/:year?/:month?" component={Posts} />
