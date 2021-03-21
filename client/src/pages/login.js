@@ -8,8 +8,8 @@ class Login extends Form {
     errors: {},
   };
   schema = {
-    username: Joi.string().required().label("Username"),
-    password: Joi.string().required().label("Password"),
+    username: Joi.string().required().email().label("Username"),
+    password: Joi.string().required().min(5).label("Password"),
   };
 
   doSubmit = () => {

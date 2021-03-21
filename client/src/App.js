@@ -11,6 +11,7 @@ import NotFound from "./pages/notFound";
 import Customer from "./pages/customer";
 import Login from "./pages/login";
 import "./App.css";
+import Register from "./pages/register";
 
 class App extends Component {
   state = {
@@ -68,6 +69,7 @@ class App extends Component {
           <Switch>
             <Route path="/products/:id" component={ProductDetails} />
             <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
             <Route path="/products" component={Products} />
             <Route path="/customer" component={Customer} />
             <Route path="/posts/:year?/:month?" component={Posts} />
