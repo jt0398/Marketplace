@@ -70,6 +70,8 @@ class App extends Component {
             <Route path="/products/:id" component={ProductDetails} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/products/:id" component={ProductDetails} />
+            <Route path="/products/new" component={ProductDetails} />
             <Route path="/products" component={Products} />
             <Route path="/customer" component={Customer} />
             <Route path="/posts/:year?/:month?" component={Posts} />

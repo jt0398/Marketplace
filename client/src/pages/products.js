@@ -6,6 +6,7 @@ import { paginate } from "../utils/paginate";
 import { getProducts } from "../services/productService";
 import { getProductTypes } from "../services/productTypeService";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 
 class Products extends Component {
   state = {
@@ -103,6 +104,9 @@ class Products extends Component {
           />
         </div>
         <div className="col">
+          <Link className="btn btn-primary mb-3" to="/products/new">
+            New Product
+          </Link>
           <p>Showing {count} products in the database</p>
           <ProductsTable
             products={products}

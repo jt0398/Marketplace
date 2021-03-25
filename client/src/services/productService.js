@@ -85,7 +85,7 @@ export function saveProduct(product) {
   productInDB.price = product.price;
 
   if (!productInDB._id) {
-    productInDB._id = Date.now();
+    productInDB._id = Date.now().toString();
     products.push(productInDB);
   }
 
