@@ -79,7 +79,7 @@ export function saveProduct(product) {
   let productInDB = products.find((p) => p._id === product._id) || {};
   productInDB.name = product.name;
   productInDB.productType = productTypeAPI.productTypes.find(
-    (pt) => pt._id === product.productType._id
+    (pt) => pt._id === product.productTypeId
   );
   productInDB.numberInStock = product.numberInStock;
   productInDB.price = product.price;

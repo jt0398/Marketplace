@@ -12,18 +12,19 @@ class Register extends Form {
     password: Joi.string().required().min(5).label("Password"),
     name: Joi.string().required().label("Name"),
   };
-  doSubmit = () => {
+  doSubmit() {
     console.log("Submitted");
-  };
+  }
   render() {
     return (
       <div>
         <h1>Register</h1>
-        <form onSubmit={this.handleSubmit}></form>
-        {this.renderInput("username", "Username")}
-        {this.renderInput("password", "Password")}
-        {this.renderInput("name", "Name")}
-        {this.renderButton("Register")}
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password")}
+          {this.renderInput("name", "Name")}
+          {this.renderButton("Register")}
+        </form>
       </div>
     );
   }

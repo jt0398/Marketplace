@@ -8,7 +8,7 @@ class Form extends Component {
     data: {},
     errors: {},
   };
-  validate = () => {
+  validate() {
     const options = {
       abortEarly: false,
     };
@@ -23,7 +23,7 @@ class Form extends Component {
     for (let item of resultError.details) errors[item.path[0]] = item.message;
 
     return errors;
-  };
+  }
   validateProperty = ({ name, value }) => {
     const obj = { [name]: value };
     const schema = { [name]: this.schema[name] };

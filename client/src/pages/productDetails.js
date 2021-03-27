@@ -6,7 +6,12 @@ import { getProduct, saveProduct } from "../services/productService";
 
 class ProductDetails extends Form {
   state = {
-    data: { name: "", productTypeId: "", numberInStock: "", price: "" },
+    data: {
+      name: "",
+      productTypeId: "",
+      numberInStock: "",
+      price: "",
+    },
     errors: {},
     product: {},
     productTypes: [],
@@ -21,7 +26,7 @@ class ProductDetails extends Form {
       .max(100)
       .required()
       .label("Number In Stock"),
-    price: Joi.number().precision(2).min(0).max(100).required().label("Prices"),
+    price: Joi.number().min(0).max(100).required().label("Prices"),
   };
   componentDidMount() {
     const productTypes = getProductTypes();
@@ -45,25 +50,26 @@ class ProductDetails extends Form {
     };
   };
 
-  doSubmit = () => {
+  doSubmit() {
     saveProduct(this.state.data);
 
     this.props.history.push("/products"); //use .replace for login forms
-  };
+  }
   render() {
     return (
       <div>
         <h1>Product</h1>
-        <form onSubmit={this.handleSubmit}></form>
-        {this.renderInput("name", "Name")}
-        {this.renderSelect(
-          "productTypeId",
-          "Product Type",
-          this.state.productTypes
-        )}
-        {this.renderInput("numberInStock", "Number In Stock")}
-        {this.renderInput("price", "Price")}
-        {this.renderButton("Save")}
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("name", "Name")}
+          {this.renderSelect(
+            "productTypeId",
+            "Product Type",
+            this.state.productTypes
+          )}
+          {this.renderInput("numberInStock", "Number In Stock")}
+          {this.renderInput("price", "Price")}
+          {this.renderButton("Save")}
+        </form>
       </div>
     );
   }
