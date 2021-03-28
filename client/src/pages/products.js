@@ -7,6 +7,7 @@ import { getProducts } from "../services/productService";
 import { getProductTypes } from "../services/productTypeService";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import SearchBox from "../components/common/searchBox";
 
 class Products extends Component {
   state = {
@@ -14,8 +15,9 @@ class Products extends Component {
     productTypes: [],
     pageSize: 4,
     currentPage: 1,
-    selectedProductType: null,
+    selectedProductType: null, //used in uncontrolled component
     sortColumn: { path: "name", order: "asc" },
+    searchQuery: "", //used in controlled component i.e. input field value={variable}. null or undefined in react are uncontrolled component
   };
 
   componentDidMount() {
@@ -56,19 +58,42 @@ class Products extends Component {
     this.setState({ selectedProductType: productType, currentPage: 1 });
   };
 
+  handleSearch = (query) => {
+    this.setState({
+      searchQuery: query,
+      selectedProductType: null,
+      currentPage: 1,
+    });
+  };
+
   getPagedData = () => {
     const {
       products: allProducts,
       selectedProductType,
       sortColumn,
+      searchQuery,
     } = this.state;
 
-    const filteredProducts =
+    let filteredProducts = allProducts;
+
+    if (searchQuery) {
+      filteredProducts = allProducts.filter(
+        (product) =>
+          product.name.toLowerCase().search(searchQuery.toLowerCase()) > -1
+      );
+    } else if (selectedProductType && selectedProductType._id) {
+      filteredProducts = allProducts.filter(
+        (product) => product.productType._id === selectedProductType._id
+      );
+    }
+
+    /*
+    filteredProducts =
       selectedProductType && selectedProductType._id
         ? allProducts.filter(
             (product) => product.productType._id === selectedProductType._id
           )
-        : allProducts;
+        : allProducts;*/
 
     const sortedProducts = _.orderBy(
       filteredProducts,
@@ -86,11 +111,12 @@ class Products extends Component {
       productTypes,
       selectedProductType,
       sortColumn,
+      searchQuery,
     } = this.state;
 
     const { totalCount: count, data } = this.getPagedData();
 
-    if (count === 0) return <p>There are no products in the database.</p>;
+    //if (count === 0) return <p>There are no products in the database.</p>;
 
     const products = paginate(data, currentPage, pageSize);
 
@@ -108,6 +134,7 @@ class Products extends Component {
             New Product
           </Link>
           <p>Showing {count} products in the database</p>
+          <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <ProductsTable
             products={products}
             onLike={this.handleLike}
