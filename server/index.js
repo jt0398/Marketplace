@@ -9,6 +9,19 @@ console.log(result);
   core module
   file or folder (./modulename)
   node_modules
+
+  npm list
+  npm list --depth 0
+  npm view mongoose
+  nppm view mongoose dependencies
+  npm view mongoose version
+  npm outdated
+  npm update //only work for minor version or patch releases
+  npm i -g npm-check-updates
+  npm i -g npm //update npm
+  npm -g outdated
+  npm un -g <name>
+  npm un <name>
 */
 
 /*
