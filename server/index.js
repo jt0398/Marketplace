@@ -1,3 +1,18 @@
+const _ = require("underscore");
+
+let result = _.contains([1, 2, 3], 2);
+
+console.log(result);
+
+/*
+  Require function resolve library. It assumes it's a 
+  core module
+  file or folder (./modulename)
+  node_modules
+*/
+
+/*
+
 const Logger = require("./logger");
 const logger = new Logger();
 const http = require("http");
@@ -22,7 +37,6 @@ logger.on("messageLogged", (args) => console.log("Listner called", args));
 
 logger.log("message");
 
-/*
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
