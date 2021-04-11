@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/jt0398/Marketplace#readme",
   "dependencies": {
+    "express": "^4.17.1",
+    "joi": "^17.4.0",
     "mongoose": "^5.12.3",
     "underscore": "^1.12.1"
   },

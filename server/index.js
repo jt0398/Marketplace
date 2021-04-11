@@ -1,70 +1,76 @@
 const _ = require("underscore");
+const express = require("express");
+const app = express();
+const Joi = require("joi"); //Joi is a class
 
-let result = _.contains([1, 2, 3], 2);
+app.use(express.json());
 
-console.log(result);
+const products = [
+  { id: 1, name: "Product 1" },
+  { id: 2, name: "Product 2" },
+  { id: 3, name: "Product 3" },
+];
 
-/*
-  Require function resolve library. It assumes it's a 
-  core module
-  file or folder (./modulename)
-  node_modules
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
-  npm list
-  npm list --depth 0
-  npm view mongoose
-  nppm view mongoose dependencies
-  npm view mongoose version
-  npm outdated
-  npm update //only work for minor version or patch releases
-  npm i -g npm-check-updates
-  npm i -g npm //update npm
-  npm -g outdated
-  npm un -g <name>
-  npm un <name>
-*/
+app.get("/api/products", (req, res) => {
+  res.send([1, 2, 3]);
+});
 
-/*
+app.get("/api/products/:id", (req, res) => {
+  const product = products.find((p) => p.id === parseInt(req.params.id));
+  if (!product)
+    return res.status(404).send("The product with the given ID was not found.");
 
-const Logger = require("./logger");
-const logger = new Logger();
-const http = require("http");
-const server = http.createServer((req, res) => {
-  if (req.url === "/") {
-    res.write("Hello Word");
-    res.end();
-  }
+  res.send(product);
+});
 
-  if (req.url === "/api/courses") {
-    res.write(JSON.stringify([1, 2, 3]));
-    res.end();
-  }
-}); //An EventEmitter
+app.post("/api/products", (req, res) => {
+  const { error } = validateProduct(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-server.listen(3000);
+  const product = {
+    id: products.length + 1,
+    name: req.body.name,
+  };
 
-console.log("Listening on port 3000");
+  products.push(product);
+  res.send(product);
+});
 
-//Add a listener before an event
-logger.on("messageLogged", (args) => console.log("Listner called", args));
+app.put("/api/products/:id", (req, res) => {
+  const product = products.find((p) => p.id === parseInt(req.params.id));
+  if (!product)
+    return res.status(404).send("The product with the given ID was not found.");
 
-logger.log("message");
+  const { error } = validateProduct(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-const path = require("path");
-const os = require("os");
-const fs = require("fs");
+  product.name = req.body.name;
+  res.send(product);
+});
 
-var pathObj = path.parse(__filename);
-console.log(pathObj);
+app.delete("/api/products/:id", (req, res) => {
+  const product = products.find((p) => p.id === parseInt(req.params.id));
+  if (!product)
+    return res.status(404).send("The product with the given ID was not found.");
 
-var totalMemory = os.totalmem();
-var freeMemory = os.freemem();
+  const index = products.indexOf(product);
+  products.splice(index, 1);
 
-console.log(`Total Memory: ${totalMemory}`);
-console.log(`Total Memory: ${freeMemory}`);
+  res.send(product);
+});
 
-fs.readdir("./", function (err, files) {
-  if (err) return console.log("Error", err);
+function validateProduct(product) {
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+  });
 
-  console.log(files);
-});*/
+  return schema.validate(product);
+}
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
