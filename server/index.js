@@ -2,6 +2,8 @@ require("dotenv").config();
 const helmet = require("helmet");
 const morgan = require("morgan");
 const logger = require("./middleware/logger");
+const appDebugger = require("Debug")("app:startup");
+const dbDebugger = require("Debug")("app:db");
 const express = require("express");
 const app = express();
 const Joi = require("joi"); //Joi is a class
@@ -14,13 +16,16 @@ app.use(helmet());
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   app.use(morgan("tiny"));
+  appDebugger("Morgan enabled");
 }
 
 app.use(logger);
+
+dbDebugger("Connected to the database");
 
 //Routes
 app.use(routes);
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => appDebugger(`Listening on port ${port}`));

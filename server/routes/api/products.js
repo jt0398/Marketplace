@@ -9,7 +9,7 @@ const products = [
 
 //route url = /api/products
 router.get("/", (req, res) => {
-  res.send([1, 2, 3]);
+  res.send(products);
 });
 
 router.get("/:id", (req, res) => {
