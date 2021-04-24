@@ -8,11 +8,14 @@ const express = require("express");
 const app = express();
 const Joi = require("joi"); //Joi is a class
 const routes = require("./routes");
+const mongoose = require("mongoose");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //key=value&key=value. extended = true gives abilitiy to pass arrays and complex objects
-app.use(express.static("public"));
 app.use(helmet());
+
+if (process.env.NODE_ENV === "production")
+  app.use(express.static("client/build"));
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   app.use(morgan("tiny"));
@@ -21,11 +24,18 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 
 app.use(logger);
 
-dbDebugger("Connected to the database");
-
 //Routes
 app.use(routes);
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => appDebugger(`Listening on port ${port}`));
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    dbDebugger("Connected to the database");
+    app.listen(port, () => appDebugger(`App listening on port ${port}`));
+  })
+  .catch((err) => console.log(err));
