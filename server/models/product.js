@@ -7,12 +7,21 @@ const schema = new mongoose.schema({
     minlength: 5,
     maxlength: 150,
   },
-  productType: { type: mongoose.Schema.Types.ObjectId, ref: "ProductTypes" },
+  productType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ProductTypes",
+    require: true,
+  },
   numberInStock: {
     type: Number,
+    require: true,
     min: 0,
     set: (v) => Math.round(v),
     get: (v) => Math.round(v),
   },
-  price: { type: Decimal, min: 1 },
+  price: { type: Decimal, require: true, min: 1 },
 });
+
+const Product = mongoose.model("Products", schema);
+
+module.exports = Product;
