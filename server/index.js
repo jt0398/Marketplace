@@ -27,6 +27,9 @@ app.use(logger);
 //Routes
 app.use(routes);
 
+mongoose.set("useCreateIndex", true);
+mongoose.set("useFindAndModify", false);
+
 const port = process.env.PORT || 3000;
 
 mongoose
