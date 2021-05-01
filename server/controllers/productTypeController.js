@@ -49,17 +49,19 @@ module.exports = {
   },
   update: async function (req, res) {
     try {
-      const { id, name } = req.body;
+      const id = req.params.id;
+      const name = req.body.name;
 
       const { error } = validateId({ id });
       const { error: err2 } = validateName({ name });
+
       if (error || err2)
         return res
           .status(400)
           .send(error.details[0].message & " " & err2.details[0].message);
 
       const productType = await db.ProductType.findByIdAndUpdate(
-        { _id: ID },
+        { _id: id },
         { name },
         { new: true }
       );
@@ -76,12 +78,12 @@ module.exports = {
   },
   delete: async function (req, res) {
     try {
-      const { id, name } = req.body;
+      const id = req.params.id;
 
       const { error } = validateId({ id });
       if (error) return res.status(400).send(error.details[0].message);
 
-      const productType = await db.ProductType.findByIdAndRemove({ _id: ID });
+      const productType = await db.ProductType.findByIdAndRemove({ _id: id });
 
       if (!productType)
         res
@@ -97,7 +99,7 @@ module.exports = {
 
 function validateId(data) {
   const schema = Joi.object({
-    _id: Joi.string().min(12).required(),
+    id: Joi.string().min(12).required(),
   });
 
   return schema.validate(data);
