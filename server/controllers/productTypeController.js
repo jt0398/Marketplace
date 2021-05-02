@@ -1,14 +1,15 @@
 const db = require("../models");
-const Joi = require("joi");
+const { validateId, validateProductType } = db.ProductType.ProductType;
+const { ProductType } = db.ProductType;
 
 module.exports = {
   findAll: async function (req, res) {
     try {
-      const productType = await db.ProductType.findAll({}).sort({ name: 1 });
+      const productTypes = await ProductType.findAll({}).sort({ name: 1 });
 
-      res.status(200).json(productType);
+      res.status(200).json(productTypes);
     } catch (err) {
-      res.status(422).json(err);
+      res.status(422).send(err);
     }
   },
   findById: async function (req, res) {
@@ -16,9 +17,9 @@ module.exports = {
       const id = req.params.id;
 
       const { error } = validateId({ id });
-      if (error) return res.status(400).json(error[0]);
+      if (error) return res.status(400).json(error.details[0].message);
 
-      const productType = await db.ProductType.findAll({ _id: ID });
+      const productType = await ProductType.findAll({ _id: ID });
 
       if (!productType)
         res
@@ -27,24 +28,25 @@ module.exports = {
 
       res.status(200).json(productType);
     } catch (err) {
-      res.status(422).json(err);
+      res.status(422).send(err);
     }
   },
   create: async function (req, res) {
     try {
       const name = req.body.name;
 
-      const { error } = validateName({ name });
+      const { error } = validateProductType({
+        name,
+      });
 
       if (error) return res.status(400).send(error.details[0].message);
 
-      let productType = new db.ProductType({ name });
+      let productType = new ProductType({ name });
       await productType.save();
 
       res.status(200).json(productType);
     } catch (err) {
-      console.log(err);
-      res.status(422).json(err);
+      res.status(422).send(err);
     }
   },
   update: async function (req, res) {
@@ -53,14 +55,12 @@ module.exports = {
       const name = req.body.name;
 
       const { error } = validateId({ id });
-      const { error: err2 } = validateName({ name });
+      const { error: err2 } = ProductType.validateProductType({ name });
 
-      if (error || err2)
-        return res
-          .status(400)
-          .send(error.details[0].message & " " & err2.details[0].message);
+      if (error) return res.status(400).send(error.details[0].message);
+      if (err2) return res.status(400).send(err2.details[0].message);
 
-      const productType = await db.ProductType.findByIdAndUpdate(
+      const productType = await ProductType.findByIdAndUpdate(
         { _id: id },
         { name },
         { new: true }
@@ -73,7 +73,7 @@ module.exports = {
 
       res.status(200).json(productType);
     } catch (err) {
-      res.status(422).json(err);
+      res.status(422).send(err);
     }
   },
   delete: async function (req, res) {
@@ -83,7 +83,7 @@ module.exports = {
       const { error } = validateId({ id });
       if (error) return res.status(400).send(error.details[0].message);
 
-      const productType = await db.ProductType.findByIdAndRemove({ _id: id });
+      const productType = await ProductType.findByIdAndRemove({ _id: id });
 
       if (!productType)
         res
@@ -92,23 +92,7 @@ module.exports = {
 
       res.status(200).json(productType);
     } catch (err) {
-      res.status(422).json(err);
+      res.status(422).send(err);
     }
   },
 };
-
-function validateId(data) {
-  const schema = Joi.object({
-    id: Joi.string().min(12).required(),
-  });
-
-  return schema.validate(data);
-}
-
-function validateName(data) {
-  const schema = Joi.object({
-    name: Joi.string().min(5).max(150).required(),
-  });
-
-  return schema.validate(data);
-}

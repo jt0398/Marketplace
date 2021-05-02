@@ -7,6 +7,7 @@ const schema = new mongoose.Schema(
       require: true,
       minlength: 5,
       maxlength: 150,
+      trim: true,
     },
     productType: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,8 +20,9 @@ const schema = new mongoose.Schema(
       min: 0,
       set: (v) => Math.round(v),
       get: (v) => Math.round(v),
+      trim: true,
     },
-    price: { type: Number, require: true, min: 1 },
+    price: { type: Number, require: true, min: 1, trim: true },
   },
   { timestamps: true }
 );
