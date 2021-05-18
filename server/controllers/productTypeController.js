@@ -1,15 +1,17 @@
 const db = require("../models");
 const { validateId, validateProductType } = db.ProductType.ProductType;
-const { ProductType } = db.ProductType;
+const ProductType = db.ProductType.ProductType;
 
 module.exports = {
   findAll: async function (req, res) {
     try {
-      const productTypes = await ProductType.findAll({}).sort({ name: 1 });
+      const productTypes = await ProductType.find({})
+        .sort({ name: 1 })
+        .select({ name: 1 });
 
       res.status(200).json(productTypes);
     } catch (err) {
-      res.status(422).send(err);
+      res.status(422).send(err.message);
     }
   },
   findById: async function (req, res) {
@@ -19,7 +21,9 @@ module.exports = {
       const { error } = validateId({ id });
       if (error) return res.status(400).json(error.details[0].message);
 
-      const productType = await ProductType.findAll({ _id: ID });
+      const productType = await ProductType.findById(id)
+        .sort({ name: 1 })
+        .select({ _id: 1, name: 1 });
 
       if (!productType)
         res
@@ -28,7 +32,7 @@ module.exports = {
 
       res.status(200).json(productType);
     } catch (err) {
-      res.status(422).send(err);
+      res.status(422).send(err.message);
     }
   },
   create: async function (req, res) {
@@ -44,9 +48,9 @@ module.exports = {
       let productType = new ProductType({ name });
       await productType.save();
 
-      res.status(200).json(productType);
+      res.status(200).json(productType.getPublicFields());
     } catch (err) {
-      res.status(422).send(err);
+      res.status(422).send(err.message);
     }
   },
   update: async function (req, res) {
@@ -71,9 +75,9 @@ module.exports = {
           .status(404)
           .send("The product type with the given ID was not found.");
 
-      res.status(200).json(productType);
+      res.status(200).json(productType.getPublicFields());
     } catch (err) {
-      res.status(422).send(err);
+      res.status(422).send(err.message);
     }
   },
   delete: async function (req, res) {
@@ -90,9 +94,9 @@ module.exports = {
           .status(404)
           .send("The product type with the given ID was not found.");
 
-      res.status(200).json(productType);
+      res.status(200).json(productType.getPublicFields());
     } catch (err) {
-      res.status(422).send(err);
+      res.status(422).send(err.message);
     }
   },
 };
