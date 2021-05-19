@@ -21,16 +21,14 @@ module.exports = {
       const { error } = validateId({ id });
       if (error) return res.status(400).json(error.details[0].message);
 
-      const productType = await ProductType.findById(id)
-        .sort({ name: 1 })
-        .select({ _id: 1, name: 1 });
+      const productType = await ProductType.findById(id);
 
       if (!productType)
-        res
+        return res
           .status(404)
           .send("The product type with the given ID was not found.");
 
-      res.status(200).json(productType);
+      res.status(200).json(productType.getPublicFields());
     } catch (err) {
       res.status(422).send(err.message);
     }
@@ -90,7 +88,7 @@ module.exports = {
       const productType = await ProductType.findByIdAndRemove({ _id: id });
 
       if (!productType)
-        res
+        return res
           .status(404)
           .send("The product type with the given ID was not found.");
 

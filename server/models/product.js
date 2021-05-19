@@ -61,4 +61,5 @@ schema.methods.getPublicFields = function () {
 
 const Product = mongoose.model("Products", schema);
 
-module.exports = Product;
+module.exports.productSchema = schema;
+module.exports.Product = Product;
