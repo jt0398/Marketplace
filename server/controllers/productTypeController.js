@@ -43,7 +43,7 @@ module.exports = {
 
       if (error) return res.status(400).send(error.details[0].message);
 
-      let productType = new ProductType({ name });
+      const productType = new ProductType({ name });
       await productType.save();
 
       res.status(200).json(productType.getPublicFields());

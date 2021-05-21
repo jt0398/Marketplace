@@ -79,19 +79,24 @@ module.exports = {
       const productType = await ProductType.findById(productTypeId);
       if (!productType) return res.status(400).send("Invalid product type");
 
-      const product = await Product.findById(id);
-      if (!product) return res.status(400).send("Invalid product");
-
-      let product = new Product({
-        name: req.body.name,
-        productType: {
-          _id: productType._id,
-          name: producType.name,
+      const product = await Product.findByIdAndUpdate(
+        { _id: id },
+        {
+          name: req.body.name,
+          productType: {
+            _id: productType._id,
+            name: producType.name,
+          },
+          numberInStock: req.body.numberInStock,
+          price: req.body.price,
         },
-        numberInStock: req.body.numberInStock,
-        price: req.body.price,
-      });
-      await product.save();
+        { new: true }
+      );
+
+      if (!product)
+        res
+          .status(404)
+          .send("The product with the given ID was not found.");     
 
       res.status(200).json(product.getPublicFields());
     } catch (err) {
