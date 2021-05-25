@@ -2,8 +2,8 @@ require("dotenv").config();
 const helmet = require("helmet");
 const morgan = require("morgan");
 const logger = require("./middleware/logger");
-const appDebugger = require("Debug")("app:startup");
-const dbDebugger = require("Debug")("app:db");
+const appDebugger = require("debug")("app:startup");
+const dbDebugger = require("debug")("app:db");
 const express = require("express");
 const app = express();
 const Joi = require("joi"); //Joi is a class

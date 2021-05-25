@@ -33,24 +33,22 @@ services:
     volumes:
       - redis-data:/data
 
-  api-service:
+  application:
     build:
-      context: "./server/"
-    depends_on:
-      - mongo
-      - redis
+      context: "./"
+    
     environment:
       - MONGODB_URI=mongodb+srv://usermarket:ycLSafffXF7bAwLU@cluster0.baaj2.mongodb.net/Marketplace
       - DEBUG=app:*
       - NODE_ENV=development
-    container_name: api-service
+    container_name: application
     restart: always
     ports:
-      - 3000:3000
+      - 3001:3001
     volumes:
-      - ./server:/usr/src/app
-      - ./node_modules:/usr/src/app/node_modules
-    command: npm start
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+
       
 volumes:
   mongo-data:   
