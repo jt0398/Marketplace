@@ -6,11 +6,16 @@ services:
     image: mongo
     restart: always
     container_name: mongo
+    ports:
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: dbadmin
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: Marketplace
     volumes: 
       - mongo-data:/data/db
+      - mongo-config:/data/configdb
+      - ./server/config/mongoUsers.js:/docker-entrypoint-initdb.d/mongoUsers.js:ro
 
   mongo-express:
     image: mongo-express
@@ -36,9 +41,11 @@ services:
   application:
     build:
       context: "./"
-    
+    depends_on:
+      - mongo
+      - redis
     environment:
-      - MONGODB_URI=mongodb+srv://usermarket:ycLSafffXF7bAwLU@cluster0.baaj2.mongodb.net/Marketplace
+      - MONGODB_URI=mongodb://dbadmin:password@mongo:27017/Marketplace
       - DEBUG=app:*
       - NODE_ENV=development
     container_name: application
@@ -51,5 +58,6 @@ services:
 
       
 volumes:
-  mongo-data:   
+  mongo-data:
+  mongo-config:   
   redis-data:
