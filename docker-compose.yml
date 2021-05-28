@@ -1,7 +1,6 @@
-version: '3.1'
+version: "3.1"
 
 services:
-
   mongo:
     image: mongo
     restart: always
@@ -12,22 +11,10 @@ services:
       MONGO_INITDB_ROOT_USERNAME: dbadmin
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: Marketplace
-    volumes: 
+    volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
       - ./server/config/mongoUsers.js:/docker-entrypoint-initdb.d/mongoUsers.js:ro
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    container_name: mongo-express
-    depends_on:
-      - mongo
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: dbadmin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: password
 
   redis:
     image: redis
@@ -56,8 +43,7 @@ services:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
 
-      
 volumes:
   mongo-data:
-  mongo-config:   
+  mongo-config:
   redis-data:

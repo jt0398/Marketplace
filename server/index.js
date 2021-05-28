@@ -30,7 +30,7 @@ app.use(routes);
 mongoose.set("useCreateIndex", true);
 mongoose.set("useFindAndModify", false);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 mongoose
   .connect(process.env.MONGODB_URI, {

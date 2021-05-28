@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { productTypeSchema } = require("./productTypes");
 const Joi = require("joi");
 
 const schema = new mongoose.Schema(
@@ -12,7 +11,10 @@ const schema = new mongoose.Schema(
       trim: true,
     },
     productType: {
-      type: productTypeSchema,
+      type: new mongoose.Schema({
+        _id: String,
+        name: String,
+      }),
       require: true,
     },
     numberInStock: {
@@ -39,7 +41,7 @@ schema.statics.validateId = function (data) {
 
 schema.statics.validateProduct = function (data) {
   const schema = Joi.object({
-    name: Joi.string().min(5).max(150).require(),
+    name: Joi.string().min(5).max(150).required(),
     productTypeId: Joi.string().required(),
     numberInStock: Joi.number().min(0).max(5000).required(),
     price: Joi.number().min(1).max(10000).required(),
@@ -54,7 +56,7 @@ schema.methods.getPublicFields = function () {
     name: this.name,
     productType: this.productType["name"],
     numberInStock: this.numberInStock,
-    price: price,
+    price: this.price,
   };
   return product;
 };

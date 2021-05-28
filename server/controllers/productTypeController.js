@@ -1,6 +1,4 @@
-const db = require("../models");
-const { validateId, validateProductType } = db.ProductType.ProductType;
-const ProductType = db.ProductType.ProductType;
+const { ProductType } = require("../models/productTypes");
 
 module.exports = {
   findAll: async function (req, res) {
@@ -18,7 +16,7 @@ module.exports = {
     try {
       const id = req.params.id;
 
-      const { error } = validateId({ id });
+      const { error } = ProductType.validateId({ id });
       if (error) return res.status(400).json(error.details[0].message);
 
       const productType = await ProductType.findById(id);
@@ -37,7 +35,7 @@ module.exports = {
     try {
       const name = req.body.name;
 
-      const { error } = validateProductType({
+      const { error } = ProductType.validateProductType({
         name,
       });
 
@@ -56,7 +54,7 @@ module.exports = {
       const id = req.params.id;
       const name = req.body.name;
 
-      const { error } = validateId({ id });
+      const { error } = ProductType.validateId({ id });
       const { error: err2 } = ProductType.validateProductType({ name });
 
       if (error) return res.status(400).send(error.details[0].message);
@@ -82,7 +80,7 @@ module.exports = {
     try {
       const id = req.params.id;
 
-      const { error } = validateId({ id });
+      const { error } = ProductType.validateId({ id });
       if (error) return res.status(400).send(error.details[0].message);
 
       const productType = await ProductType.findByIdAndRemove({ _id: id });
