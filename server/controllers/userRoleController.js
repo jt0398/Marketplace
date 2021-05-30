@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const { ProductType } = require("../models/productTypes");
+const { UserRole } = require("../models/userRole");
 
 module.exports = {
   findAll: async function (req, res) {
     try {
-      const productTypes = await ProductType.aggregate([
+      const UserRoles = await UserRole.aggregate([
         {
           $project: {
             _id: 0,
@@ -14,7 +14,7 @@ module.exports = {
         },
       ]).sort({ name: 1 });
 
-      res.status(200).json(productTypes);
+      res.status(200).json(UserRoles);
     } catch (err) {
       res.status(422).send(err.message);
     }
@@ -24,16 +24,16 @@ module.exports = {
       const id = req.params.id;
 
       if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(400).send("Invalid product type.");
+        return res.status(400).send("Invalid user role.");
 
-      const productType = await ProductType.findById(id);
+      const UserRole = await UserRole.findById(id);
 
-      if (!productType)
+      if (!UserRole)
         return res
           .status(404)
-          .send("The product type with the given ID was not found.");
+          .send("The user role with the given ID was not found.");
 
-      res.status(200).json(productType.getPublicFields());
+      res.status(200).json(UserRole.getPublicFields());
     } catch (err) {
       res.status(422).send(err.message);
     }
@@ -42,16 +42,16 @@ module.exports = {
     try {
       const name = req.body.name;
 
-      const { error } = ProductType.validateProductType({
+      const { error } = UserRole.validateUserRole({
         name,
       });
 
       if (error) return res.status(400).send(error.details[0].message);
 
-      const productType = new ProductType({ name });
-      await productType.save();
+      const UserRole = new UserRole({ name });
+      await UserRole.save();
 
-      res.status(200).json(productType.getPublicFields());
+      res.status(200).json(UserRole.getPublicFields());
     } catch (err) {
       res.status(422).send(err.message);
     }
@@ -62,23 +62,21 @@ module.exports = {
       const name = req.body.name;
 
       if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(400).send("Invalid product type.");
+        return res.status(400).send("Invalid user role.");
 
-      const { error } = ProductType.validateProductType({ name });
+      const { error } = UserRole.validateUserRole({ name });
       if (error) return res.status(400).send(error.details[0].message);
 
-      const productType = await ProductType.findByIdAndUpdate(
+      const UserRole = await UserRole.findByIdAndUpdate(
         { _id: id },
         { name },
         { new: true }
       );
 
-      if (!productType)
-        res
-          .status(404)
-          .send("The product type with the given ID was not found.");
+      if (!UserRole)
+        res.status(404).send("The user role with the given ID was not found.");
 
-      res.status(200).json(productType.getPublicFields());
+      res.status(200).json(UserRole.getPublicFields());
     } catch (err) {
       res.status(422).send(err.message);
     }
@@ -88,16 +86,16 @@ module.exports = {
       const id = req.params.id;
 
       if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(400).send("Invalid product type.");
+        return res.status(400).send("Invalid user role.");
 
-      const productType = await ProductType.findByIdAndRemove({ _id: id });
+      const UserRole = await UserRole.findByIdAndRemove({ _id: id });
 
-      if (!productType)
+      if (!UserRole)
         return res
           .status(404)
-          .send("The product type with the given ID was not found.");
+          .send("The user role with the given ID was not found.");
 
-      res.status(200).json(productType.getPublicFields());
+      res.status(200).json(UserRole.getPublicFields());
     } catch (err) {
       res.status(422).send(err.message);
     }

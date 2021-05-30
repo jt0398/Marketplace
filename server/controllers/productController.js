@@ -4,10 +4,19 @@ const { ProductType } = require("../models/productTypes");
 module.exports = {
   findAll: async function (req, res) {
     try {
-      const products = await Product.find({})
-        .sort({ name: 1 })
-        .select({ _id: 1, name: 1 });
-
+      const products = await Product.aggregate([
+        {
+          $project: {
+            _id: 0,
+            id: "$_id",
+            name: "$name",
+            productType: "$productType.name",
+            numberInStock: "$numberInStock",
+            price: "$price",
+            user: "$user.email",
+          },
+        },
+      ]).sort({ name: 1 });
       console.log(products);
 
       res.status(200).json(products);
@@ -19,8 +28,8 @@ module.exports = {
     try {
       const id = req.params.id;
 
-      const { error } = Product.validateId({ id });
-      if (error) return res.status(400).json(error.details[0].message);
+      if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).send("Invalid product.");
 
       const product = await Product.findById(id);
 
@@ -38,9 +47,6 @@ module.exports = {
     try {
       const { error } = Product.validateProduct(req.body);
       if (error) return res.status(400).send(error.details[0].message);
-
-      const { error2 } = ProductType.validateId(req.body.productTypeId);
-      if (error2) return res.status(400).send(error2.details[0].message);
 
       const productType = await ProductType.findById(req.body.productTypeId);
       if (!productType) return res.status(400).send("Invalid product type");
@@ -62,18 +68,14 @@ module.exports = {
   update: async function (req, res) {
     try {
       const id = req.params.id;
-      const productTypeId = req.body.productTypeId;
 
-      const { error } = Product.validateId({ id });
+      if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).send("Invalid product.");
+
+      const { error } = Product.validateProduct(req.body);
       if (error) return res.status(400).send(error.details[0].message);
 
-      const { error2 } = Product.validateProduct(req.body);
-      if (error2) return res.status(400).send(error2.details[0].message);
-
-      const { error3 } = ProductType.validateId({ id: productTypeId });
-      if (error3) return res.status(400).send(error3.details[0].message);
-
-      const productType = await ProductType.findById(productTypeId);
+      const productType = await ProductType.findById(req.body.productTypeId);
       if (!productType) return res.status(400).send("Invalid product type");
 
       const product = await Product.findByIdAndUpdate(
@@ -98,10 +100,9 @@ module.exports = {
   delete: async function (req, res) {
     try {
       const id = req.params.id;
-      const productTypeId = req.body.productTypeId;
 
-      const { error } = Product.validateId({ id });
-      if (error) return res.status(400).send(error.details[0].message);
+      if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).send("Invalid product.");
 
       const product = await Product.findByIdAndRemove({ _id: id });
 
