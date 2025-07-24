@@ -30,7 +30,7 @@
     "if-env": "^1.0.4",
     "joi": "^17.4.0",
     "mongoose": "^5.12.3",
-    "morgan": "^1.10.0",
+    "morgan": "^1.10.1",
     "underscore": "^1.12.1"
   },
   "devDependencies": {
